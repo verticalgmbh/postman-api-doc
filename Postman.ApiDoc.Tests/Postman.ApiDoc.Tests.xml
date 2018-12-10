@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Postman.ApiDoc.Tests</name>
+    </assembly>
+    <members>
+        <member name="T:Postman.ApiDoc.Tests.Environment.PackEx.Api.Tests.Helpers.TestServerExtensions">
+            <summary>
+            extensions for testserver
+            </summary>
+        </member>
+        <member name="M:Postman.ApiDoc.Tests.Environment.PackEx.Api.Tests.Helpers.TestServerExtensions.GetService``1(Microsoft.AspNetCore.TestHost.TestServer)">
+            <summary>
+            get a service from test server
+            </summary>
+            <typeparam name="T">type of service to get</typeparam>
+            <param name="server">server of which to get service</param>
+            <returns></returns>
+        </member>
+        <member name="M:Postman.ApiDoc.Tests.Environment.TestStartup.ConfigureServices(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            This method gets called by the runtime. Use this method to add services to the container.
+            </summary>
+            <param name="services"> Empty collection of services </param>
+        </member>
+        <member name="M:Postman.ApiDoc.Tests.Environment.TestStartup.Configure(Microsoft.AspNetCore.Builder.IApplicationBuilder,Microsoft.AspNetCore.Hosting.IHostingEnvironment,Microsoft.Extensions.Logging.ILoggerFactory)">
+            <summary>
+            This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+            </summary>
+            <param name="app"> App to register middlewares </param>
+            <param name="env"> Environment information </param>
+            <param name="loggerFactory"> Factory for logging </param>
+        </member>
+    </members>
+</doc>
