@@ -25,14 +25,14 @@ namespace Vertical.Postman.ApiDoc
     public class PostmanCollectionCreator
     {
         readonly string host;
-        readonly AuthenticationInfo authentication;
+        readonly IAuthenticationData[] authentication;
 
         /// <summary>
         /// creates a new <see cref="PostmanCollectionCreator"/>
         /// </summary>
         /// <param name="host">host where server is running on</param>
-        /// <param name="authentication">path to authentication token method (optional)</param>
-        public PostmanCollectionCreator(string host, AuthenticationInfo authentication = null)
+        /// <param name="authentication">authentication methods to include</param>
+        public PostmanCollectionCreator(string host, params IAuthenticationData[] authentication)
         {
             this.host = host;
             this.authentication = authentication;
@@ -47,11 +47,9 @@ namespace Vertical.Postman.ApiDoc
         {
             yield return Variable.Create("hostname", host, "Host where api is running on");
             yield return Variable.Create("auth_token", null, "Bearer token used for authorization");
-            if (authentication != null)
-            {
-                yield return Variable.Create("auth_server", authentication.Path.Host, "Server where to get authentication token");
-                yield return Variable.Create("auth_user", authentication.AuthenticationData.Username, "Username used to get authentication token");
-                yield return Variable.Create("auth_password", authentication.AuthenticationData.Password, "Password used to get authentication token");
+            if (authentication != null) {
+                yield return Variable.Create("client_id", "", "Client ID of authenticated APIs");
+                yield return Variable.Create("client_secret", "", "Client Secret of authenticated APIs");
             }
         }
 
@@ -182,11 +180,6 @@ namespace Vertical.Postman.ApiDoc
 
             if (Attribute.IsDefined(((ControllerActionDescriptor) description.ActionDescriptor)?.MethodInfo, typeof(AuthorizeAttribute)))
             {
-                /*return new PostmanAuth
-                {
-                    Type = "bearer",
-                    Bearer = "{{auth_token}}"
-                };*/
                 yield return new Parameter
                 {
                     Key = "Authorization",
@@ -217,43 +210,34 @@ namespace Vertical.Postman.ApiDoc
             }
         }
 
-        Url Convert(Uri uri, string hostvariable)
+        Url Convert(Uri uri)
         {
             return new Url
             {
-                Raw = uri.Scheme + "://{{" + hostvariable + "}}/" + uri.PathAndQuery,
+                Raw = uri.ToString(),
                 Protocol = uri.Scheme,
                 Host = new[]
                 {
-                    "{{"+hostvariable+"}}"
+                    uri.Host+(uri.IsDefaultPort?"":$":{uri.Port}")
                 },
                 Path = uri.AbsolutePath.Split('/')
             };
         }
 
-        RequestItem CreateAuthenticationRequest()
+        RequestItem CreateAuthenticationPassword(IAuthenticationData authdata)
         {
             return new RequestItem
             {
-                Name = "Authenticate (Get Login Token)",
+                Name = authdata.Name,
                 Request = new Request
                 {
-                    Description = "Authenticates a user and provides the authentication token for all requests",
-                    Method = "POST",
-                    Url = Convert(authentication.Path, "auth_server"),
+                    Description = authdata.Description,
+                    Method = authdata.Method,
+                    Url = Convert(new Uri(authdata.Server)),
                     Body = new RawBody
                     {
                         Mode = "raw",
-                        Raw = JsonConvert.SerializeObject(
-                            new AuthenticationData
-                            {
-                                ClientId = authentication.AuthenticationData.ClientId,
-                                Realm = authentication.AuthenticationData.Realm,
-                                GrantType = authentication.AuthenticationData.GrantType,
-                                Audience = authentication.AuthenticationData.Audience,
-                                Username = "{{auth_user}}",
-                                Password = "{{auth_password}}"
-                            }, Newtonsoft.Json.Formatting.Indented, JsonSettings.Authentication
+                        Raw = JsonConvert.SerializeObject(authdata, Newtonsoft.Json.Formatting.Indented, JsonSettings.Authentication
                         )
                     },
                     Header=new[] {
@@ -281,8 +265,10 @@ namespace Vertical.Postman.ApiDoc
 
         private IEnumerable<Item> CreateItems(IEnumerable<ApiDescriptionGroup> apidescriptiongroups, XmlDocument documentation)
         {
-            if (authentication != null)
-                yield return CreateAuthenticationRequest();
+            if (authentication != null) {
+                foreach (IAuthenticationData authdata in authentication)
+                    yield return CreateAuthenticationPassword(authdata);
+            }
 
             foreach (ApiDescriptionGroup group in apidescriptiongroups)
             {

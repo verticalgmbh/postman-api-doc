@@ -6,12 +6,12 @@
     <RootNamespace>Vertical.Postman.ApiDoc</RootNamespace>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Authors>Toni Gottschall, vertical GmbH</Authors>
-    <Version>0.4.2</Version>
+    <Version>0.4.11-preview</Version>
     <Company>vertical GmbH</Company>
     <Description>Creates a postman collection by traversing the current api description.</Description>
     <Copyright>vertical GmbH</Copyright>
     <PackageTags>postman, api, doc, documentation, collection, request</PackageTags>
-    <AssemblyVersion>0.4.2.0</AssemblyVersion>
+    <AssemblyVersion>0.4.11.0</AssemblyVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

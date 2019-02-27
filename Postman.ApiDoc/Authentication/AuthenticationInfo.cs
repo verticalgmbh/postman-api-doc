@@ -1,4 +1,5 @@
 ﻿using System;
+using Vertical.Postman.ApiDoc.Authentication.Auth0;
 
 namespace Vertical.Postman.ApiDoc.Authentication
 {
@@ -16,7 +17,7 @@ namespace Vertical.Postman.ApiDoc.Authentication
         /// <summary>
         /// data to send to authentication server
         /// </summary>
-        public AuthenticationData AuthenticationData { get; set; }
+        public IAuthenticationData[] AuthenticationTypes { get; set; }
 
     }
 }

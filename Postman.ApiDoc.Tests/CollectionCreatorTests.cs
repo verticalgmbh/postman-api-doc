@@ -1,6 +1,5 @@
 using System;
 using System.Linq;
-using System.Security.Policy;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.TestHost;
@@ -8,7 +7,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Postman.ApiDoc.Tests.Environment;
 using Postman.ApiDoc.Tests.Environment.PackEx.Api.Tests.Helpers;
 using Vertical.Postman.ApiDoc;
-using Vertical.Postman.ApiDoc.Authentication;
+using Vertical.Postman.ApiDoc.Authentication.Auth0;
 using Vertical.Postman.ApiDoc.Structure;
 
 namespace Postman.ApiDoc.Tests
@@ -56,18 +55,14 @@ namespace Postman.ApiDoc.Tests
                 .UseStartup<TestStartup>();
 
             using (TestServer server = new TestServer(webhostbuilder)) {
-                PostmanCollectionCreator collectioncreator = new PostmanCollectionCreator("http://localhost:5000", new AuthenticationInfo {
-                    Path = new Uri("http://auth.localhost:5000/"),
-                    AuthenticationData = new AuthenticationData {
+                PostmanCollectionCreator collectioncreator = new PostmanCollectionCreator("http://localhost:5000",
+                    new PasswordAuthenticationData {
+                        Server = "http://auth.localhost:5000/",
                         Audience = "audience",
                         ClientId = "clientid",
-                        GrantType = "test",
-                        Username = "user",
-                        Password = "password",
-                        Realm = "realm",
-                        Scope = "scopes"
-                    }
-                });
+                        Username = "{{auth_user}}",
+                        Password = "{{auth_password}}"
+                    });
                 Collection collection = collectioncreator.Create(Guid.Empty, "Test", server.GetService<IApiDescriptionGroupCollectionProvider>());
                 Assert.AreNotEqual(0, collection.Item.Length);
 
