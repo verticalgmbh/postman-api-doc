@@ -39,7 +39,7 @@
         /// <summary>
         /// authentication scope
         /// </summary>
-        public string Scope => "openid";
+        public string Scope { get; set; } = "openid";
 
         /// <inheritdoc />
         public string Name => "Authenticate (Get User Token)";

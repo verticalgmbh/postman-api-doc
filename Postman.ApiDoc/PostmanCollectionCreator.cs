@@ -263,7 +263,7 @@ namespace Vertical.Postman.ApiDoc
             };
         }
 
-        private IEnumerable<Item> CreateItems(IEnumerable<ApiDescriptionGroup> apidescriptiongroups, XmlDocument documentation)
+        IEnumerable<Item> CreateItems(IEnumerable<ApiDescriptionGroup> apidescriptiongroups, XmlDocument documentation)
         {
             if (authentication != null) {
                 foreach (IAuthenticationData authdata in authentication)

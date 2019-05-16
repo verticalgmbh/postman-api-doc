@@ -61,7 +61,8 @@ namespace Postman.ApiDoc.Tests
                         Audience = "audience",
                         ClientId = "clientid",
                         Username = "{{auth_user}}",
-                        Password = "{{auth_password}}"
+                        Password = "{{auth_password}}",
+                        Scope = "read:resource"
                     });
                 Collection collection = collectioncreator.Create(Guid.Empty, "Test", server.GetService<IApiDescriptionGroupCollectionProvider>());
                 Assert.AreNotEqual(0, collection.Item.Length);

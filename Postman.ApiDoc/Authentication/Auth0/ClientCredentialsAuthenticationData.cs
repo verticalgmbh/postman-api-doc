@@ -36,5 +36,8 @@
 
         /// <inheritdoc />
         public string Server { get; set; }
+
+        /// <inheritdoc />
+        public string Scope { get; set; }
     }
 }

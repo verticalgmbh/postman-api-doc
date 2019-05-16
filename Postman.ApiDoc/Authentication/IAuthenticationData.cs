@@ -29,5 +29,10 @@ namespace Vertical.Postman.ApiDoc.Authentication {
         /// server to which to send request
         /// </summary>
         string Server { get; set; }
+
+        /// <summary>
+        /// scopes to request
+        /// </summary>
+        string Scope { get; set; }
     }
 }
